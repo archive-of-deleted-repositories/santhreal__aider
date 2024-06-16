@@ -1,8 +1,15 @@
----
-nav_order: 999
----
 
 # Release history
+
+### v0.38.0
+
+- Use `--vim` for vim keybindings in the chat.
+- [Add LLM metadata](https://aider.chat/docs/llms/warnings.html#specifying-context-window-size-and-token-costs) via `.aider.models.json` file (by @caseymcc).
+- More detailed error messages on token limit errors.
+- Ensure `--commit --dry-run` does nothing.
+- Have playwright wait for idle network to better scrape js sites.
+- Documentation updates, moved into website/ subdir.
+- Moved tests/ into aider/tests/.
 
 ### v0.37.0
 
