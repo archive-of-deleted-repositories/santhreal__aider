@@ -1,8 +1,23 @@
----
-nav_order: 999
----
 
 # Release history
+
+### v0.39.0
+
+- Use `--sonnet` for Claude 3.5 Sonnet, which is the top model on [aider's LLM code editing leaderboard](https://aider.chat/docs/leaderboards/#claude-35-sonnet-takes-the-top-spot).
+- All `AIDER_xxx` environment variables can now be set in `.env` (by @jpshack-at-palomar).
+- Use `--llm-history-file` to log raw messages sent to the LLM (by @daniel-vainsencher).
+- Commit messages are no longer prefixed with "aider:". Instead the git author and committer names have "(aider)" added.
+
+### v0.38.0
+
+- Use `--vim` for [vim keybindings](https://aider.chat/docs/commands.html#vi) in the chat.
+- [Add LLM metadata](https://aider.chat/docs/llms/warnings.html#specifying-context-window-size-and-token-costs) via `.aider.models.json` file (by @caseymcc).
+- More detailed [error messages on token limit errors](https://aider.chat/docs/troubleshooting/token-limits.html).
+- Single line commit messages, without the recent chat messages.
+- Ensure `--commit --dry-run` does nothing.
+- Have playwright wait for idle network to better scrape js sites.
+- Documentation updates, moved into website/ subdir.
+- Moved tests/ into aider/tests/.
 
 ### v0.37.0
 
