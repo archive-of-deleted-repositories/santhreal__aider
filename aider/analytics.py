@@ -12,8 +12,9 @@ from aider import __version__
 from aider.dump import dump  # noqa: F401
 
 mixpanel_project_token = "***REMOVED***"
-posthog_project_api_key = '***REMOVED***'
-posthog_host = 'https://us.i.posthog.com'
+posthog_project_api_key = "***REMOVED***"
+posthog_host = "https://us.i.posthog.com"
+
 
 class Analytics:
     mp = None
