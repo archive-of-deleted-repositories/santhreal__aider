@@ -20,6 +20,10 @@ Always reply in the same language as the change request.
 Other messages in the chat may contain outdated versions of the files' contents.
 """  # noqa: E501
 
+    files_content_assistant_reply = (
+        "Ok, I will use that as the true, current contents of the files."
+    )
+
     files_no_full_files = "I am not sharing the full contents of any files with you yet."
 
     files_no_full_files_with_repo_map = ""
