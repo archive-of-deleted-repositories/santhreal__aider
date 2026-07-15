@@ -356,6 +356,12 @@ def process_fenced_block(lines, start_line_num):
             fname = b_fname
 
         block = block[2:]
+    elif block[0].startswith("+++ "):
+        # The LLM omitted the "--- " line and started the block with "+++ ".
+        # Recover the target path from the "+++ " header so the hunk still applies.
+        b_fname = block[0][4:].strip()
+        fname = b_fname[2:] if b_fname.startswith("b/") else b_fname
+        block = block[1:]
     else:
         fname = None
 
@@ -369,8 +375,8 @@ def process_fenced_block(lines, start_line_num):
         if len(line) < 2:
             continue
 
-        if line.startswith("+++ ") and hunk[-2].startswith("--- "):
-            if hunk[-3] == "\n":
+        if line.startswith("+++ ") and len(hunk) >= 2 and hunk[-2].startswith("--- "):
+            if len(hunk) >= 3 and hunk[-3] == "\n":
                 hunk = hunk[:-3]
             else:
                 hunk = hunk[:-2]

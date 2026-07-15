@@ -114,6 +114,47 @@ These changes will add the `--check-update` option to the command-line interface
         self.assertEqual(len(edits), 2)
         self.assertEqual(len(edits[0][1]), 3)
 
+    def test_find_diffs_missing_minus_header_recovers_fname(self):
+        # LLMs frequently omit the "--- " header and start the block with "+++ ".
+        # This used to raise IndexError (hunk[-2] on a 1-element hunk); now the
+        # target path is recovered from the "+++ " line so the hunk still applies.
+        content = """
+Some text...
+
+```diff
++++ b/hello.py
+@@ ... @@
+-print(1)
++print(2)
+```
+"""
+        edits = find_diffs(content)
+        dump(edits)
+        self.assertEqual(len(edits), 1)
+        self.assertEqual(edits[0][0], "hello.py")
+        self.assertEqual(edits[0][1], ["-print(1)\n", "+print(2)\n"])
+
+    def test_find_diffs_lone_plus_header_mid_block_does_not_crash(self):
+        # A second file whose "--- " header was omitted must not crash the parser
+        # (regression for the mid-block hunk[-2] IndexError).
+        content = """
+```diff
+--- a/f1.py
++++ b/f1.py
+@@ ... @@
+-a
++b
++++ b/f2.py
+@@ ... @@
+-c
++d
+```
+"""
+        edits = find_diffs(content)
+        dump(edits)
+        self.assertEqual(edits[0][0], "f1.py")
+        self.assertEqual(edits[1][1], ["-c\n", "+d\n"])
+
 
 if __name__ == "__main__":
     unittest.main()
