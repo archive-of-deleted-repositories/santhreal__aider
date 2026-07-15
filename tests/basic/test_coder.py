@@ -1433,6 +1433,27 @@ This command will print 'Hello, World!' to the console."""
                     # (because user rejected the changes)
                     mock_editor.run.assert_not_called()
 
+    def test_compute_costs_from_tokens_cache_hit(self):
+        # Regression: the cache-hit branch used to subtract the cache-hit *price*
+        # from the prompt *token count* (prompt_tokens - input_cost_per_token_cache_hit),
+        # mixing dimensions and grossly overcharging. The cache-miss tokens are
+        # prompt_tokens - cache_hit_tokens (see the deepseek comment in the code).
+        with GitTemporaryDirectory():
+            coder = Coder.create(self.GPT35, None, io=InputOutput())
+            coder.main_model.info = {
+                "input_cost_per_token": 1e-6,
+                "output_cost_per_token": 2e-6,
+                "input_cost_per_token_cache_hit": 1e-7,
+            }
+            cost = coder.compute_costs_from_tokens(
+                prompt_tokens=1000,
+                completion_tokens=100,
+                cache_write_tokens=0,
+                cache_hit_tokens=800,
+            )
+            # 800 cache-hit * 1e-7 + (1000-800) miss * 1e-6 + 100 completion * 2e-6
+            self.assertAlmostEqual(cost, 8e-5 + 2e-4 + 2e-4)
+
 
 if __name__ == "__main__":
     unittest.main()
